@@ -1,0 +1,1 @@
+My attempt to get the STM32U595RIT6 working in Stop Mode, with ADF1 and LPDMA running and waking the micro up with Full and Half Full interrupts. The ADF peripheral stores data in a SRAM4 buffer, and the buffer is written to a SD card through the SDMMC interface. This code works if Sleep Mode is used instead of Stop Mode. But so far I cant get it to work in Stop Mode
