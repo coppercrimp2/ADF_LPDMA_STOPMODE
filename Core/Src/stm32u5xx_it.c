@@ -57,7 +57,6 @@
 /* External variables --------------------------------------------------------*/
 extern MDF_HandleTypeDef AdfHandle0;
 extern DMA_HandleTypeDef handle_LPDMA1_Channel0;
-extern LPTIM_HandleTypeDef hlptim3;
 extern SD_HandleTypeDef hsd1;
 /* USER CODE BEGIN EV */
 
@@ -202,20 +201,6 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
-  * @brief This function handles EXTI Line9 interrupt.
-  */
-void EXTI9_IRQHandler(void)
-{
-  /* USER CODE BEGIN EXTI9_IRQn 0 */
-
-  /* USER CODE END EXTI9_IRQn 0 */
-  HAL_GPIO_EXTI_IRQHandler(USB_VBUS_Pin);
-  /* USER CODE BEGIN EXTI9_IRQn 1 */
-
-  /* USER CODE END EXTI9_IRQn 1 */
-}
-
-/**
   * @brief This function handles SDMMC1 global interrupt.
   */
 void SDMMC1_IRQHandler(void)
@@ -227,20 +212,6 @@ void SDMMC1_IRQHandler(void)
   /* USER CODE BEGIN SDMMC1_IRQn 1 */
 
   /* USER CODE END SDMMC1_IRQn 1 */
-}
-
-/**
-  * @brief This function handles LPTIM3 global interrupt.
-  */
-void LPTIM3_IRQHandler(void)
-{
-  /* USER CODE BEGIN LPTIM3_IRQn 0 */
-
-  /* USER CODE END LPTIM3_IRQn 0 */
-  HAL_LPTIM_IRQHandler(&hlptim3);
-  /* USER CODE BEGIN LPTIM3_IRQn 1 */
-
-  /* USER CODE END LPTIM3_IRQn 1 */
 }
 
 /**

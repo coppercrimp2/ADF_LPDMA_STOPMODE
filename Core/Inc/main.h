@@ -67,9 +67,8 @@ void Error_Handler(void);
 #define PWR_STATUS_0_GPIO_Port GPIOC
 #define PWR_STATUS_1_Pin GPIO_PIN_7
 #define PWR_STATUS_1_GPIO_Port GPIOC
-#define USB_VBUS_Pin GPIO_PIN_9
-#define USB_VBUS_GPIO_Port GPIOA
-#define USB_VBUS_EXTI_IRQn EXTI9_IRQn
+#define PWR_STATUS_2_Pin GPIO_PIN_8
+#define PWR_STATUS_2_GPIO_Port GPIOA
 #define PWR_3p3V_EN_Pin GPIO_PIN_10
 #define PWR_3p3V_EN_GPIO_Port GPIOA
 #define SDCard_En_Pin GPIO_PIN_7

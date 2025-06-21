@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -22,15 +22,15 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-__attribute__((section(".sram4"))) DMA_NodeTypeDef NodeRx;
+//__attribute__((section(".sram4"))) DMA_NodeTypeDef MDFNode;
 /* USER CODE END Includes */
 
-//DMA_NodeTypeDef NodeRx;
+__attribute__((section(".sram4"))) DMA_NodeTypeDef MDFNode;
 DMA_QListTypeDef MDFQueue;
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-//extern int16_t        RecBuff[REC_BUFF_SIZE * 2U];
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -71,11 +71,11 @@ HAL_StatusTypeDef MX_MDFQueue_Config(void)
   pNodeConfig.DstAddress = 0;
   pNodeConfig.DataSize = 0;
 
-  /* Build NodeRx Node */
-  ret |= HAL_DMAEx_List_BuildNode(&pNodeConfig, &NodeRx);
+  /* Build MDFNode Node */
+  ret |= HAL_DMAEx_List_BuildNode(&pNodeConfig, &MDFNode);
 
-  /* Insert NodeRx to Queue */
-  ret |= HAL_DMAEx_List_InsertNode_Tail(&MDFQueue, &NodeRx);
+  /* Insert MDFNode to Queue */
+  ret |= HAL_DMAEx_List_InsertNode_Tail(&MDFQueue, &MDFNode);
 
   ret |= HAL_DMAEx_List_SetCircularMode(&MDFQueue);
 

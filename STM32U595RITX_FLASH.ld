@@ -58,7 +58,6 @@ SECTIONS
 		*(.sram4)
 		. = ALIGN(4);
 	} >SRAM4
-		
   /* The startup code into "FLASH" Rom type memory */
   .isr_vector :
   {

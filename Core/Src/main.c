@@ -19,12 +19,9 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "mdf.h"
-#include "i2c.h"
 #include "icache.h"
 #include "lpdma.h"
-#include "lptim.h"
 #include "memorymap.h"
-#include "rtc.h"
 #include "sdmmc.h"
 #include "gpio.h"
 
@@ -81,6 +78,7 @@ void Error(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 static void MDF_DMAConfig(void);
+static void EnterLowPowerMode(void);
 void Error(void);
 
 extern DMA_QListTypeDef MDFQueue;
@@ -109,11 +107,11 @@ int main(void)
 
   /* USER CODE END Init */
 
-  /* Configure the system clock */
-  SystemClock_Config();
-
   /* Configure the System Power */
   SystemPower_Config();
+
+  /* Configure the system clock */
+  SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
 
@@ -122,13 +120,8 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_LPDMA1_Init();
-  HAL_GPIO_WritePin(GPIOA, PWR_3p3V_EN_Pin, GPIO_PIN_SET);
-  HAL_GPIO_WritePin(GPIOB, SDCard_En_Pin, GPIO_PIN_SET);
   MX_ADF1_Init();
-  MX_LPTIM3_Init();
   MX_SDMMC1_SD_Init();
-  MX_I2C3_Init();
-  MX_RTC_Init();
   MX_ICACHE_Init();
   /* USER CODE BEGIN 2 */
 
@@ -163,22 +156,47 @@ int main(void)
       Error();
     }
 
+    HAL_PWREx_ConfigSRDDomain(PWR_SRD_DOMAIN_RUN);
 
     while (1)
       {
-        __HAL_RCC_ADF1_CLKAM_ENABLE(); //ADF1 autonomous mode enable in Stop 0/1/2 mode
-        __HAL_RCC_LPDMA1_CLKAM_ENABLE();
+    	EnterLowPowerMode();
+        //__HAL_RCC_ADF1_CLKAM_ENABLE(); //ADF1 autonomous mode enable in Stop 0/1/2 mode
+       // __HAL_RCC_LPDMA1_CLKAM_ENABLE();
+    	/*
+        __HAL_RCC_PWR_CLK_ENABLE();
+        __HAL_RCC_MSIKSTOP_ENABLE();
+        __HAL_RCC_HSISTOP_ENABLE();
+        __HAL_RCC_SDMMC1_CLK_DISABLE();
+        */
+        //HAL_PWREx_ConfigSRDDomain(PWR_SRD_DOMAIN_RUN);
 
-        HAL_PWREx_ConfigSRDDomain(PWR_SRD_DOMAIN_RUN);
+    	//HAL_SuspendTick();
+    	//HAL_PWREx_EnterSTOP1Mode(PWR_STOPENTRY_WFI);
+    	//HAL_PWR_EnterSLEEPMode(PWR_LOWPOWERREGULATOR_ON, PWR_SLEEPENTRY_WFI);
+    	//HAL_ResumeTick();
 
-    	HAL_SuspendTick();
-    	HAL_PWREx_EnterSTOP1Mode(PWR_STOPENTRY_WFI);
-    	HAL_ResumeTick();
+    	/*
+    	if (__HAL_PWR_GET_FLAG(PWR_FLAG_STOPF) == 0U)
+		{
+		  Error_Handler();
+		}
+
+		__HAL_PWR_CLEAR_FLAG(PWR_FLAG_STOPF);
+
+		if (__HAL_PWR_GET_FLAG(PWR_FLAG_STOPF) != 0U)
+		{
+		  Error_Handler();
+		}
 
     	__HAL_RCC_HSI_ENABLE();
 		__HAL_RCC_PLL_ENABLE();
 		__HAL_RCC_PLLCLKOUT_ENABLE(RCC_PLL1_DIVP);
 
+		__HAL_RCC_SDMMC1_CLK_ENABLE();
+		__HAL_RCC_GPIOC_CLK_ENABLE();
+		__HAL_RCC_GPIOD_CLK_ENABLE();
+*/
         if(DmaRecHalfBuffCplt == 1)
         {
           FatFsResult = f_write(&MyFile, &RecBuff[0], (UINT)((REC_BUFF_SIZE_DIV2 - 1) * 2), (void *)&byteswritten);
@@ -212,7 +230,7 @@ int main(void)
       MX_GPDMA1_DeInit();
 
       __HAL_RCC_SDMMC1_CLK_DISABLE();
-      __HAL_RCC_SDMMC1_CLK_ENABLE();
+      /*__HAL_RCC_SDMMC1_CLK_ENABLE();
 
       MX_LPDMA1_Init();
       MX_ADF1_Init();
@@ -259,7 +277,7 @@ int main(void)
           f_close(&MyFile);
           break;
         }
-      }
+      }*/
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -290,16 +308,10 @@ void SystemClock_Config(void)
     Error_Handler();
   }
 
-  /** Configure LSE Drive Capability
-  */
-  HAL_PWR_EnableBkUpAccess();
-  __HAL_RCC_LSEDRIVE_CONFIG(RCC_LSEDRIVE_LOW);
-
   /** Initializes the CPU, AHB and APB buses clocks
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI48|RCC_OSCILLATORTYPE_LSE
-                              |RCC_OSCILLATORTYPE_MSI|RCC_OSCILLATORTYPE_MSIK;
-  RCC_OscInitStruct.LSEState = RCC_LSE_ON;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI48|RCC_OSCILLATORTYPE_MSI
+                              |RCC_OSCILLATORTYPE_MSIK;
   RCC_OscInitStruct.HSI48State = RCC_HSI48_ON;
   RCC_OscInitStruct.MSIState = RCC_MSI_ON;
   RCC_OscInitStruct.MSICalibrationValue = RCC_MSICALIBRATION_DEFAULT;
@@ -420,6 +432,15 @@ static void MDF_DMAConfig(void)
 void Error(void)
 {
   while(1);
+}
+
+static void EnterLowPowerMode(void)
+{
+    /* Enable Power Control clock */
+  __HAL_RCC_PWR_CLK_ENABLE();
+
+  /* Enter the system to STOP2 mode */
+  HAL_PWREx_EnterSTOP2Mode(PWR_STOPENTRY_WFI);
 }
 /* USER CODE END 4 */
 

@@ -90,7 +90,13 @@ void HAL_MDF_MspInit(MDF_HandleTypeDef* mdfHandle)
   if(IS_ADF_INSTANCE(mdfHandle->Instance))
   {
   /* USER CODE BEGIN ADF1_MspInit 0 */
-
+  __HAL_RCC_ADF1_CLKAM_ENABLE();
+  __HAL_RCC_LPDMA1_CLKAM_ENABLE();
+  __HAL_RCC_LPGPIO1_CLKAM_ENABLE();
+  __HAL_RCC_SRAM4_CLKAM_ENABLE();
+   __HAL_RCC_MSIKSTOP_ENABLE();
+  HAL_PWREx_EnableVddIO2();
+  HAL_PWREx_EnableVddA();
   /* USER CODE END ADF1_MspInit 0 */
 
   /** Initializes the peripherals clock

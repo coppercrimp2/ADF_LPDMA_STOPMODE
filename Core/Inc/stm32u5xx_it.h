@@ -22,7 +22,7 @@
 #define __STM32U5xx_IT_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Private includes ----------------------------------------------------------*/
@@ -55,9 +55,7 @@ void SVC_Handler(void);
 void DebugMon_Handler(void);
 void PendSV_Handler(void);
 void SysTick_Handler(void);
-void EXTI9_IRQHandler(void);
 void SDMMC1_IRQHandler(void);
-void LPTIM3_IRQHandler(void);
 void ADF1_IRQHandler(void);
 void LPDMA1_Channel0_IRQHandler(void);
 /* USER CODE BEGIN EFP */

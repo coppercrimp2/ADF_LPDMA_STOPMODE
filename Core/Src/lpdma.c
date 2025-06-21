@@ -45,7 +45,7 @@ void MX_LPDMA1_Init(void)
 
   /* USER CODE END LPDMA1_Init 1 */
   handle_LPDMA1_Channel0.Instance = LPDMA1_Channel0;
-  handle_LPDMA1_Channel0.InitLinkedList.Priority = DMA_HIGH_PRIORITY;
+  handle_LPDMA1_Channel0.InitLinkedList.Priority = DMA_LOW_PRIORITY_HIGH_WEIGHT;
   handle_LPDMA1_Channel0.InitLinkedList.LinkStepMode = DMA_LSM_FULL_EXECUTION;
   handle_LPDMA1_Channel0.InitLinkedList.TransferEventMode = DMA_TCEM_LAST_LL_ITEM_TRANSFER;
   handle_LPDMA1_Channel0.InitLinkedList.LinkedListMode = DMA_LINKEDLIST_CIRCULAR;
